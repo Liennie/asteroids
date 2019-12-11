@@ -115,16 +115,20 @@ func print(m map[Point]bool) {
 		}
 	}
 
+	b := &strings.Builder{}
+
 	for y := 0; y <= max.y; y++ {
 		for x := 0; x <= max.x; x++ {
 			if m[Point{x, y}] {
-				fmt.Print("#")
+				b.WriteRune('#')
 			} else {
-				fmt.Print(".")
+				b.WriteRune('.')
 			}
 		}
-		fmt.Println()
+		b.WriteRune('\n')
 	}
+
+	fmt.Print(b.String())
 }
 
 func ret(m map[Point]bool) {
