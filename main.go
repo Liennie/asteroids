@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"time"
 )
 
 type Point struct {
@@ -103,6 +104,40 @@ func detect(m map[Point]bool, pos Point) []Point {
 	return detects
 }
 
+func print(m map[Point]bool) {
+	max := Point{}
+	for p := range m {
+		if p.x > max.x {
+			max.x = p.x
+		}
+		if p.y > max.y {
+			max.y = p.y
+		}
+	}
+
+	for y := 0; y <= max.y; y++ {
+		for x := 0; x <= max.x; x++ {
+			if m[Point{x, y}] {
+				fmt.Print("#")
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Println()
+	}
+}
+
+func ret(m map[Point]bool) {
+	max := 0
+	for p := range m {
+		if p.y > max {
+			max = p.y
+		}
+	}
+
+	fmt.Printf("\033[%dA", max+1)
+}
+
 func main() {
 	data := `
 		..#..###....#####....###........#
@@ -188,6 +223,11 @@ func main() {
 
 	all := []Point{}
 
+	delay := time.Millisecond * 20
+
+	print(m)
+	time.Sleep(delay)
+
 	for {
 		d := detect(m, at)
 		if len(d) == 0 {
@@ -202,6 +242,9 @@ func main() {
 
 		for _, p := range d {
 			m[p] = false
+			ret(m)
+			print(m)
+			time.Sleep(delay)
 		}
 	}
 
